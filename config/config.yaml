@@ -1,0 +1,47 @@
+project:
+  name: student_performance_ml_app
+paths:
+  raw_data: data/raw/student_performance.csv
+  processed_dir: data/processed
+  models_dir: models
+  log_dir: logs
+  preprocessor: models/preprocessor.pkl
+  best_regressor: models/model_v1.pkl
+  best_classifier: models/best_classifier.pkl
+  metrics: models/metrics.json
+  comparison: models/model_comparison.json
+split:
+  test_size: 0.2
+  random_state: 42
+use_exam_score: true
+features:
+  all:
+    - StudyHours
+    - Attendance
+    - Resources
+    - Extracurricular
+    - Motivation
+    - Internet
+    - Gender
+    - Age
+    - LearningStyle
+    - OnlineCourses
+    - Discussions
+    - AssignmentCompletion
+    - ExamScore
+    - EduTech
+    - StressLevel
+  numeric: [StudyHours, Attendance, Age, OnlineCourses, AssignmentCompletion, ExamScore]
+  passthrough: [Resources, Extracurricular, Motivation, Internet, Gender, Discussions, EduTech, StressLevel]
+  nominal: [LearningStyle]
+hyperparameters:
+  decision_tree:
+    max_depth: [4, 8]
+    min_samples_leaf: [2]
+  svm:
+    C: [1.0, 3.0]
+    gamma: [scale]
+  random_forest:
+    n_estimators: [30]
+    max_depth: [8, 14]
+    min_samples_leaf: [2]

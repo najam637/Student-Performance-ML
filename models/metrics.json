@@ -1,0 +1,11 @@
+{
+  "r2": 1.0,
+  "mae": 0.0,
+  "rmse": 0.0,
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "best_regressor": "decision_tree",
+  "best_classifier": "decision_tree",
+  "use_exam_score": true,
+  "leakage_note": "FinalGrade is deterministically binned from ExamScore. Scores with ExamScore are leakage-inflated and must not be interpreted as independent prediction performance."
+}

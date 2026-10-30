@@ -1,0 +1,623 @@
+{
+  "leakage_note": "FinalGrade is deterministically binned from ExamScore. Scores with ExamScore are leakage-inflated and must not be interpreted as independent prediction performance.",
+  "with_exam_score": {
+    "regression": [
+      {
+        "task": "regression",
+        "model": "linear_regression",
+        "use_exam_score": true,
+        "cv_best_score": 0.9374782348226323,
+        "best_params": {},
+        "cv_results": [],
+        "r2": 0.9391181940380877,
+        "mae": 0.23589041593681026,
+        "rmse": 0.27684376061392185
+      },
+      {
+        "task": "regression",
+        "model": "decision_tree",
+        "use_exam_score": true,
+        "cv_best_score": 1.0,
+        "best_params": {
+          "model__max_depth": 4,
+          "model__min_samples_leaf": 2
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__max_depth": 4,
+              "model__min_samples_leaf": 2
+            },
+            "mean_test_score": 1.0
+          },
+          {
+            "params": {
+              "model__max_depth": 8,
+              "model__min_samples_leaf": 2
+            },
+            "mean_test_score": 1.0
+          }
+        ],
+        "r2": 1.0,
+        "mae": 0.0,
+        "rmse": 0.0
+      },
+      {
+        "task": "regression",
+        "model": "svm",
+        "use_exam_score": true,
+        "cv_best_score": 0.9213811042487343,
+        "best_params": {
+          "model__C": 1.0,
+          "model__gamma": "scale"
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__C": 1.0,
+              "model__gamma": "scale"
+            },
+            "mean_test_score": 0.9213811042487343
+          },
+          {
+            "params": {
+              "model__C": 3.0,
+              "model__gamma": "scale"
+            },
+            "mean_test_score": 0.9184838101876742
+          }
+        ],
+        "r2": 0.91780630464192,
+        "mae": 0.2616578389167211,
+        "rmse": 0.32166975620496885
+      },
+      {
+        "task": "regression",
+        "model": "random_forest",
+        "use_exam_score": true,
+        "cv_best_score": 1.0,
+        "best_params": {
+          "model__max_depth": 8,
+          "model__min_samples_leaf": 2,
+          "model__n_estimators": 30
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__max_depth": 8,
+              "model__min_samples_leaf": 2,
+              "model__n_estimators": 30
+            },
+            "mean_test_score": 1.0
+          },
+          {
+            "params": {
+              "model__max_depth": 14,
+              "model__min_samples_leaf": 2,
+              "model__n_estimators": 30
+            },
+            "mean_test_score": 1.0
+          }
+        ],
+        "r2": 1.0,
+        "mae": 0.0,
+        "rmse": 0.0
+      }
+    ],
+    "classification": [
+      {
+        "task": "classification",
+        "model": "decision_tree",
+        "use_exam_score": true,
+        "cv_best_score": 1.0,
+        "best_params": {
+          "model__max_depth": 4,
+          "model__min_samples_leaf": 2
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__max_depth": 4,
+              "model__min_samples_leaf": 2
+            },
+            "mean_test_score": 1.0
+          },
+          {
+            "params": {
+              "model__max_depth": 8,
+              "model__min_samples_leaf": 2
+            },
+            "mean_test_score": 1.0
+          }
+        ],
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "confusion_matrix": [
+          [
+            680,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            589,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            644,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            581
+          ]
+        ]
+      },
+      {
+        "task": "classification",
+        "model": "svm",
+        "use_exam_score": true,
+        "cv_best_score": 0.8813948694293163,
+        "best_params": {
+          "model__C": 3.0,
+          "model__gamma": "scale"
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__C": 1.0,
+              "model__gamma": "scale"
+            },
+            "mean_test_score": 0.8804589089137187
+          },
+          {
+            "params": {
+              "model__C": 3.0,
+              "model__gamma": "scale"
+            },
+            "mean_test_score": 0.8813948694293163
+          }
+        ],
+        "accuracy": 0.896952686447474,
+        "macro_f1": 0.8949551831982133,
+        "confusion_matrix": [
+          [
+            661,
+            19,
+            0,
+            0
+          ],
+          [
+            62,
+            476,
+            51,
+            0
+          ],
+          [
+            0,
+            44,
+            551,
+            49
+          ],
+          [
+            0,
+            0,
+            32,
+            549
+          ]
+        ]
+      },
+      {
+        "task": "classification",
+        "model": "random_forest",
+        "use_exam_score": true,
+        "cv_best_score": 1.0,
+        "best_params": {
+          "model__max_depth": 14,
+          "model__min_samples_leaf": 2,
+          "model__n_estimators": 30
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__max_depth": 8,
+              "model__min_samples_leaf": 2,
+              "model__n_estimators": 30
+            },
+            "mean_test_score": 0.9991575221238937
+          },
+          {
+            "params": {
+              "model__max_depth": 14,
+              "model__min_samples_leaf": 2,
+              "model__n_estimators": 30
+            },
+            "mean_test_score": 1.0
+          }
+        ],
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "confusion_matrix": [
+          [
+            680,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            589,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            644,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            581
+          ]
+        ]
+      },
+      {
+        "task": "classification",
+        "model": "naive_bayes",
+        "use_exam_score": true,
+        "cv_best_score": 0.9835341972858744,
+        "best_params": {},
+        "cv_results": [],
+        "accuracy": 0.9851643945469126,
+        "macro_f1": 0.985024761468991,
+        "confusion_matrix": [
+          [
+            678,
+            2,
+            0,
+            0
+          ],
+          [
+            8,
+            565,
+            16,
+            0
+          ],
+          [
+            0,
+            2,
+            642,
+            0
+          ],
+          [
+            0,
+            0,
+            9,
+            572
+          ]
+        ]
+      }
+    ],
+    "best_regressor": "decision_tree",
+    "best_classifier": "decision_tree"
+  },
+  "without_exam_score": {
+    "regression": [
+      {
+        "task": "regression",
+        "model": "linear_regression",
+        "use_exam_score": false,
+        "cv_best_score": 0.001807303715500308,
+        "best_params": {},
+        "cv_results": [],
+        "r2": 0.007061218038352135,
+        "mae": 0.99999743599896,
+        "rmse": 1.1180267985740544
+      },
+      {
+        "task": "regression",
+        "model": "decision_tree",
+        "use_exam_score": false,
+        "cv_best_score": -0.07599158450055361,
+        "best_params": {
+          "model__max_depth": 4,
+          "model__min_samples_leaf": 2
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__max_depth": 4,
+              "model__min_samples_leaf": 2
+            },
+            "mean_test_score": -0.07599158450055361
+          },
+          {
+            "params": {
+              "model__max_depth": 8,
+              "model__min_samples_leaf": 2
+            },
+            "mean_test_score": -0.3511507511020225
+          }
+        ],
+        "r2": 0.00933289029585238,
+        "mae": 0.992365884991528,
+        "rmse": 1.1167471402395839
+      },
+      {
+        "task": "regression",
+        "model": "svm",
+        "use_exam_score": false,
+        "cv_best_score": -0.1396233952051345,
+        "best_params": {
+          "model__C": 1.0,
+          "model__gamma": "scale"
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__C": 1.0,
+              "model__gamma": "scale"
+            },
+            "mean_test_score": -0.1396233952051345
+          },
+          {
+            "params": {
+              "model__C": 3.0,
+              "model__gamma": "scale"
+            },
+            "mean_test_score": -0.26143070060108076
+          }
+        ],
+        "r2": -0.11515686678465942,
+        "mae": 1.0085079678699165,
+        "rmse": 1.1848379558483209
+      },
+      {
+        "task": "regression",
+        "model": "random_forest",
+        "use_exam_score": false,
+        "cv_best_score": 0.08069098363478014,
+        "best_params": {
+          "model__max_depth": 14,
+          "model__min_samples_leaf": 2,
+          "model__n_estimators": 30
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__max_depth": 8,
+              "model__min_samples_leaf": 2,
+              "model__n_estimators": 30
+            },
+            "mean_test_score": 0.04565595339735764
+          },
+          {
+            "params": {
+              "model__max_depth": 14,
+              "model__min_samples_leaf": 2,
+              "model__n_estimators": 30
+            },
+            "mean_test_score": 0.08069098363478014
+          }
+        ],
+        "r2": 0.6677136724065813,
+        "mae": 0.5064090358013278,
+        "rmse": 0.6467660467500314
+      }
+    ],
+    "classification": [
+      {
+        "task": "classification",
+        "model": "decision_tree",
+        "use_exam_score": false,
+        "cv_best_score": 0.2860060309385579,
+        "best_params": {
+          "model__max_depth": 8,
+          "model__min_samples_leaf": 2
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__max_depth": 4,
+              "model__min_samples_leaf": 2
+            },
+            "mean_test_score": 0.2282203634703175
+          },
+          {
+            "params": {
+              "model__max_depth": 8,
+              "model__min_samples_leaf": 2
+            },
+            "mean_test_score": 0.2860060309385579
+          }
+        ],
+        "accuracy": 0.4165998396150762,
+        "macro_f1": 0.40698405016586836,
+        "confusion_matrix": [
+          [
+            363,
+            104,
+            133,
+            80
+          ],
+          [
+            191,
+            188,
+            154,
+            56
+          ],
+          [
+            156,
+            97,
+            314,
+            77
+          ],
+          [
+            164,
+            102,
+            141,
+            174
+          ]
+        ]
+      },
+      {
+        "task": "classification",
+        "model": "svm",
+        "use_exam_score": false,
+        "cv_best_score": 0.29580409558669696,
+        "best_params": {
+          "model__C": 3.0,
+          "model__gamma": "scale"
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__C": 1.0,
+              "model__gamma": "scale"
+            },
+            "mean_test_score": 0.27607109326656215
+          },
+          {
+            "params": {
+              "model__C": 3.0,
+              "model__gamma": "scale"
+            },
+            "mean_test_score": 0.29580409558669696
+          }
+        ],
+        "accuracy": 0.2702485966319166,
+        "macro_f1": 0.2637716877939599,
+        "confusion_matrix": [
+          [
+            248,
+            171,
+            173,
+            88
+          ],
+          [
+            182,
+            145,
+            155,
+            107
+          ],
+          [
+            201,
+            169,
+            177,
+            97
+          ],
+          [
+            204,
+            124,
+            149,
+            104
+          ]
+        ]
+      },
+      {
+        "task": "classification",
+        "model": "random_forest",
+        "use_exam_score": false,
+        "cv_best_score": 0.3594262791845768,
+        "best_params": {
+          "model__max_depth": 14,
+          "model__min_samples_leaf": 2,
+          "model__n_estimators": 30
+        },
+        "cv_results": [
+          {
+            "params": {
+              "model__max_depth": 8,
+              "model__min_samples_leaf": 2,
+              "model__n_estimators": 30
+            },
+            "mean_test_score": 0.3292089801046507
+          },
+          {
+            "params": {
+              "model__max_depth": 14,
+              "model__min_samples_leaf": 2,
+              "model__n_estimators": 30
+            },
+            "mean_test_score": 0.3594262791845768
+          }
+        ],
+        "accuracy": 0.8612670408981555,
+        "macro_f1": 0.8610282854355993,
+        "confusion_matrix": [
+          [
+            601,
+            24,
+            34,
+            21
+          ],
+          [
+            42,
+            482,
+            37,
+            28
+          ],
+          [
+            38,
+            29,
+            555,
+            22
+          ],
+          [
+            23,
+            20,
+            28,
+            510
+          ]
+        ]
+      },
+      {
+        "task": "classification",
+        "model": "naive_bayes",
+        "use_exam_score": false,
+        "cv_best_score": 0.26570649359115783,
+        "best_params": {},
+        "cv_results": [],
+        "accuracy": 0.26623897353648757,
+        "macro_f1": 0.2623233930630651,
+        "confusion_matrix": [
+          [
+            231,
+            204,
+            156,
+            89
+          ],
+          [
+            196,
+            163,
+            121,
+            109
+          ],
+          [
+            202,
+            181,
+            155,
+            106
+          ],
+          [
+            194,
+            140,
+            132,
+            115
+          ]
+        ]
+      }
+    ],
+    "best_regressor": "random_forest",
+    "best_classifier": "random_forest"
+  }
+}

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Performance Predictor</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F6FC; --dot:#D5DEF0; --card:#FFFFFF; --ink:#14213D; --muted:#5B6783; --edge:#D9E1F0;
+  --blue:#2F4FD8; --on-blue:#FFFFFF; --blue-soft:#E8EDFD; --pen:#D8344A; --rule:#DCE6F5; --margin:#F2B8C0; --sheet:#FFFEFB;
+  --s1:#C9D5FB; --s2:#9DB2F7; --s3:#6A87EE; --s4:#2F4FD8; --shadow:0 1px 2px rgba(20,33,61,.05),0 10px 30px rgba(20,33,61,.07);
+  --display:"Bricolage Grotesque",system-ui,sans-serif; --body:"Figtree",system-ui,sans-serif; color-scheme:light;
+}
+[data-theme="dark"]{
+  --bg:#0D1324; --dot:#1A2340; --card:#141C33; --ink:#E8ECF8; --muted:#9AA6C4; --edge:#27325A;
+  --blue:#7F96FF; --on-blue:#0D1324; --blue-soft:#1E2A55; --pen:#FF6F83; --rule:#222D52; --margin:#6A2F3D; --sheet:#182040;
+  --s1:#2A3868; --s2:#3F58AE; --s3:#6280E6; --s4:#93A9FF; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35); color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:22px 22px;
+  color:var(--ink);font:400 1rem/1.55 var(--body);padding:0 16px 56px;transition:background-color .3s,color .3s}
+.wrap{max-width:1080px;margin:0 auto}
+
+header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:36px 0 18px}
+h1{font:700 clamp(1.9rem,4vw,2.8rem)/1.1 var(--display);margin:0 0 8px;letter-spacing:-.02em}
+header p{margin:0;color:var(--muted);max-width:56ch}
+.theme{flex:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--edge);background:var(--card);color:var(--ink);cursor:pointer;display:grid;place-items:center;box-shadow:var(--shadow)}
+.theme svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.theme .moon{display:none}
+[data-theme="dark"] .theme .sun{display:none}
+[data-theme="dark"] .theme .moon{display:block}
+
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.stat{background:var(--card);border:1px solid var(--edge);border-radius:999px;padding:6px 14px;font-size:.92rem;color:var(--muted)}
+.stat b{color:var(--blue);font-weight:600;font-variant-numeric:tabular-nums}
+
+.tabs{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;background:var(--card);border:1px solid var(--edge);border-radius:12px;padding:4px;margin-bottom:20px;box-shadow:var(--shadow)}
+.tabs::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:var(--blue);border-radius:9px;transform:translateX(calc(var(--i,0)*100%));transition:transform .28s cubic-bezier(.4,.1,.2,1)}
+.tabs button{position:relative;z-index:1;font:600 .95rem var(--body);border:0;background:none;color:var(--muted);padding:10px 20px;border-radius:9px;cursor:pointer;transition:color .2s}
+.tabs button[aria-selected="true"]{color:var(--on-blue)}
+
+.panel{display:none;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:start}
+.panel.active{display:grid}
+.panel.enter{animation:enter .3s ease-out}
+@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+form{background:var(--card);border:1px solid var(--edge);border-radius:18px;padding:26px;box-shadow:var(--shadow)}
+form h2{font:700 1.3rem var(--display);margin:0 0 4px}
+form .hint{margin:0 0 22px;color:var(--muted);font-size:.93rem}
+.group+.group{margin-top:26px}
+.group h3{font:600 .95rem var(--body);margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--edge);color:var(--muted)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px}
+.field{min-width:0;border:0;padding:0;margin:0}
+.field.wide{grid-column:1/-1}
+.row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+label,legend{font-weight:600;font-size:.92rem;padding:0}
+output{font-weight:600;color:var(--blue);font-variant-numeric:tabular-nums;background:var(--blue-soft);padding:0 10px;border-radius:6px;min-width:44px;text-align:center}
+
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;margin:0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--blue) var(--p,50%),var(--edge) var(--p,50%))}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--edge)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--blue)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;margin-top:-7px;border-radius:50%;background:var(--card);border:3px solid var(--blue);box-shadow:0 1px 4px rgba(0,0,0,.25);transition:transform .15s}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--card);border:3px solid var(--blue)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.18)}
+
+.seg-group{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.seg{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.seg span{display:block;padding:7px 14px;border:1px solid var(--edge);border-radius:9px;font-size:.9rem;font-weight:500;background:var(--card);transition:background .15s,border-color .15s,color .15s}
+.seg input:checked+span{background:var(--blue-soft);border-color:var(--blue);color:var(--blue);font-weight:600}
+.seg input:focus-visible+span,input[type=range]:focus-visible,button:focus-visible,summary:focus-visible,.switch input:focus-visible+.knob{outline:3px solid var(--blue);outline-offset:2px}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:26px}
+.btn{font:600 1rem var(--body);border-radius:10px;padding:12px 22px;cursor:pointer;border:1px solid var(--blue);transition:transform .12s,opacity .2s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--blue);color:var(--on-blue)}
+.btn.ghost{background:var(--card);color:var(--blue)}
+.btn.plain{border-color:transparent;background:none;color:var(--muted);padding:12px 10px}
+.btn:disabled{opacity:.6;cursor:wait}
+.switch{position:relative;display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-size:.9rem;font-weight:500;color:var(--muted);cursor:pointer}
+.switch input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.knob{width:38px;height:22px;border-radius:11px;background:var(--edge);position:relative;transition:background .2s}
+.knob::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.switch input:checked+.knob{background:var(--blue)}
+.switch input:checked+.knob::after{transform:translateX(16px)}
+
+.result{position:sticky;top:16px}
+.sheet{position:relative;background:var(--sheet);border:1px solid var(--edge);border-radius:18px;min-height:360px;padding:26px 26px 26px 58px;box-shadow:var(--shadow);
+  background-image:repeating-linear-gradient(transparent 0 31px,var(--rule) 31px 32px);background-position:0 12px;transition:background-color .3s}
+.sheet::before{content:"";position:absolute;top:0;bottom:0;left:40px;width:2px;background:var(--margin)}
+.sheet p{margin:0}
+.empty{color:var(--muted);line-height:32px;padding-top:8px}
+.label{color:var(--muted);font-weight:500;line-height:32px}
+.mark{position:relative;display:inline-block;padding:10px 34px;margin:6px 0 4px}
+.mark .num{font:700 clamp(3.4rem,8vw,5rem)/1 var(--display);color:var(--pen);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.mark .num.sm{font-size:clamp(2.2rem,5vw,3.2rem)}
+.mark .out{font:500 1rem var(--body);color:var(--muted);margin-left:6px}
+.mark svg{position:absolute;inset:-6px -10px;width:calc(100% + 20px);height:calc(100% + 12px);overflow:visible}
+.mark path{fill:none;stroke:var(--pen);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100}
+.mark.drawn path{animation:draw .9s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.band{font:700 1.4rem var(--display);line-height:32px}
+.band small{font:500 1rem var(--body);color:var(--muted)}
+.note{color:var(--muted);line-height:32px}
+.actual{display:inline-block;margin-top:6px;background:var(--blue-soft);color:var(--blue);font-weight:600;padding:2px 10px;border-radius:6px;line-height:26px}
+
+.ruler{position:relative;margin:26px 0 12px}
+.track{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;height:12px}
+.track i{border-radius:6px;opacity:.4;transition:opacity .35s,transform .35s}
+.track i:nth-child(1){background:var(--s1)}.track i:nth-child(2){background:var(--s2)}.track i:nth-child(3){background:var(--s3)}.track i:nth-child(4){background:var(--s4)}
+.track i.on{opacity:1;transform:scaleY(1.35)}
+.pin{position:absolute;top:-8px;left:0;transition:left .6s cubic-bezier(.3,1.25,.5,1)}
+.pin::after{content:"";display:block;width:4px;height:28px;margin-left:-2px;background:var(--pen);border-radius:2px;box-shadow:0 0 0 2px var(--sheet)}
+.ticks{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:10px;font-size:.74rem;color:var(--muted);line-height:1.3}
+.ticks b{display:block;color:var(--ink);font-weight:600}
+
+.bars{margin-top:8px}
+.bar{display:grid;grid-template-columns:92px 1fr 44px;gap:10px;align-items:center;line-height:32px;font-size:.92rem}
+.bar i{display:block;height:10px;border-radius:5px;background:var(--blue-soft);overflow:hidden}
+.bar b{display:block;height:100%;width:0;background:var(--blue);border-radius:5px;transition:width .6s cubic-bezier(.3,1,.4,1),background .3s}
+.bar.top b{background:var(--pen)}
+.bar .pct{text-align:right;font-variant-numeric:tabular-nums}
+
+.history{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+.history .title{font-size:.88rem;color:var(--muted);font-weight:500}
+.chip{font:500 .88rem var(--body);background:var(--card);color:var(--ink);border:1px solid var(--edge);border-radius:999px;padding:4px 12px;cursor:pointer;transition:border-color .15s,color .15s}
+.chip:hover{border-color:var(--blue);color:var(--blue)}
+
+details{margin-top:28px;background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:14px 18px}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--muted);margin:10px 0 0;max-width:80ch}
+footer{margin-top:20px;color:var(--muted);font-size:.85rem;text-align:center}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;font-weight:500;font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:10;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.banner{background:var(--card);border:1px solid var(--pen);color:var(--pen);font-weight:600;border-radius:12px;padding:14px 18px;margin-bottom:20px}
+
+@media(max-width:860px){
+  .panel.active{grid-template-columns:1fr}
+  .result{position:static}
+  .fields{grid-template-columns:1fr}
+  .sheet{padding-left:52px}
+  .switch{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+  .mark path{stroke-dashoffset:0}
+}
+.model-choice{display:block;margin:12px 0 18px;color:var(--muted);font-size:.9rem}
+.model-choice select{display:block;margin-top:6px;padding:10px;width:100%;max-width:420px;border:1px solid var(--edge);border-radius:8px;background:var(--card);color:var(--ink)}
+.comparison{margin-top:30px;background:var(--card);border:1px solid var(--edge);border-radius:20px;padding:clamp(18px,3vw,28px);box-shadow:var(--shadow)}
+.comparison-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px}
+.comparison-heading h2{font:700 clamp(1.45rem,3vw,1.9rem)/1.15 var(--display);margin:0 0 7px}
+.comparison-heading p{margin:0;color:var(--muted);max-width:64ch}
+.model-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.model-card{min-width:0;border:1px solid var(--edge);border-radius:16px;overflow:hidden;background:var(--card)}
+.model-card-head{padding:18px 20px;background:var(--blue-soft);border-bottom:1px solid var(--edge)}
+.model-card-head h3{font:700 1.15rem var(--display);margin:0 0 4px;color:var(--blue)}
+.model-card-head p{margin:0;color:var(--muted);font-size:.9rem}
+.table-wrap{overflow-x:auto}
+.comparison table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:420px}
+.comparison th,.comparison td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--edge);white-space:nowrap}
+.comparison th{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;background:var(--bg)}
+.comparison tbody tr:last-child td{border-bottom:0}
+.comparison tbody tr:hover{background:var(--blue-soft)}
+.comparison td:nth-child(n+3){font-variant-numeric:tabular-nums}
+.model-name{font-weight:600;color:var(--ink);text-transform:capitalize}
+.experiment-label{display:inline-block;border:1px solid var(--edge);border-radius:999px;padding:3px 8px;color:var(--muted);font-size:.78rem}
+.comparison-status{color:var(--muted);padding:16px 2px}
+@media(max-width:760px){.model-columns{grid-template-columns:1fr}.comparison-heading{align-items:flex-start;flex-direction:column}}
+
+</style>
+</head><body><div class="wrap">
+<header><div><h1>Student Performance Predictor</h1><p>Explore how a student's study habits and exam performance relate to their predicted final grade.</p></div>
+<button class="theme" id="theme" type="button" aria-label="Switch theme"><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></header>
+<div class="stats" id="stats"></div>
+<div class="tabs" id="tabs" role="tablist"><button role="tab" id="tab-reg" aria-selected="true">Predict numeric grade</button><button role="tab" id="tab-clf" aria-selected="false">Predict grade category</button></div>
+<section class="panel active" id="panel-reg"><form id="form-reg"><h2>Numeric final grade</h2><p class="hint">Predict the numeric FinalGrade code (0–3).</p><label class="model-choice">Model <select name="model"><option value="best">Best model (recommended)</option><option value="linear_regression">Linear Regression</option><option value="decision_tree">Decision Tree</option><option value="svm">SVM / SVR</option><option value="random_forest">Random Forest</option></select></label><div class="groups"></div><div class="actions"><button class="btn primary" type="submit">Predict grade</button><button class="btn ghost" type="button" data-sample>Try a dataset example</button><button class="btn plain" type="button" data-reset>Reset</button></div></form>
+<div class="result"><div class="sheet" aria-live="polite"><p class="empty" id="empty-reg">Your predicted numeric grade will appear here.</p><div id="body-reg" hidden><p class="label">Predicted numeric grade code</p><div class="mark"><span class="num" id="reg-num">0</span><span class="out">/ 3</span></div><p class="band" id="reg-band"></p><p class="note" id="reg-note"></p></div></div></div></section>
+<section class="panel" id="panel-clf"><form id="form-clf"><h2>Final grade category</h2><p class="hint">Classify the student into a grade category.</p><label class="model-choice">Model <select name="model"><option value="best">Best model (recommended)</option><option value="decision_tree">Decision Tree</option><option value="svm">SVM (RBF)</option><option value="random_forest">Random Forest</option><option value="naive_bayes">Naive Bayes</option></select></label><div class="groups"></div><div class="actions"><button class="btn primary" type="submit">Predict category</button><button class="btn ghost" type="button" data-sample>Try a dataset example</button><button class="btn plain" type="button" data-reset>Reset</button></div></form>
+<div class="result"><div class="sheet" aria-live="polite"><p class="empty" id="empty-clf">Your predicted category will appear here.</p><div id="body-clf" hidden><p class="label">Predicted grade category</p><div class="mark"><span class="num sm" id="clf-name"></span></div><p class="band" id="clf-code"></p><p class="note" id="clf-note"></p></div></div></div></section>
+<section class="comparison" aria-labelledby="comparison-title">
+  <div class="comparison-heading"><div><h2 id="comparison-title">Model performance</h2><p>Compare the regression and classification models using the same held-out test split. Results are shown for experiments with and without ExamScore.</p></div></div>
+  <div id="comparison-table" class="model-columns"><p class="comparison-status">Loading model results…</p></div>
+</section>
+<footer>Built with scikit-learn, FastAPI and plain HTML</footer></div><div class="toast" id="toast" role="status"></div>
+<script>
+const API = location.protocol === "file:" ? "http://127.0.0.1:8000" : "";
+let info, sample;
+const defaults = {};
+const $ = (s,el=document)=>el.querySelector(s);
+const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
+const labels = {Resources:"Resources code",Extracurricular:"Extracurricular activity code",Motivation:"Motivation code",Internet:"Internet access code",Gender:"Gender code",LearningStyle:"Learning style code",Discussions:"Class discussions code",EduTech:"Education technology code",StressLevel:"Stress level code",StudyHours:"Study hours per week",Attendance:"Attendance (%)",OnlineCourses:"Online courses",AssignmentCompletion:"Assignment completion (%)",ExamScore:"Exam score",Age:"Age"};
+const groups = [
+ {title:"Study habits",keys:["StudyHours","Attendance","Resources","Motivation","OnlineCourses","AssignmentCompletion","Discussions","EduTech"]},
+ {title:"About the student",keys:["Age","Gender","LearningStyle","StressLevel","Extracurricular","Internet","ExamScore"]}
+];
+function toast(s){const t=$("#toast");t.textContent=s;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000)}
+function buildForms(){
+ $$(".groups").forEach(host=>{host.innerHTML=groups.map(g=>`<div class="group"><h3>${g.title}</h3><div class="fields">${g.keys.map(k=>{const s=info.features[k];return `<div class="field"><div class="row"><label for="${host.closest('form').id}-${k}">${labels[k]||k}</label><output>${s.default}</output></div><input type="range" id="${host.closest('form').id}-${k}" name="${k}" min="${s.min}" max="${s.max}" step="1" value="${s.default}"></div>`}).join("")}</div></div>`).join("");});
+ $$('input[type=range]').forEach(paint);
+}
+function paint(el){const p=(el.value-el.min)/(el.max-el.min||1)*100;el.style.setProperty("--p",p+"%");const out=el.closest(".field").querySelector("output");if(out)out.textContent=el.value}
+function read(form){const d={};new FormData(form).forEach((v,k)=>{if(k==="model")d[k]=v;else d[k]=Number(v)});return d}
+function fill(d){Object.entries(d).forEach(([k,v])=>$$(`[name="${k}"]`).forEach(el=>{el.value=v;paint(el)}))}
+async function predict(kind,form){
+ const resultId=kind==="reg"?"reg":"clf";
+ try{
+  const payload=read(form);if(payload.model==="best")delete payload.model;const r=await fetch(API+(kind==="reg"?"/predict/regression":"/predict/classification"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  const data=await r.json();if(!r.ok)throw Error(data.detail||"Prediction failed");
+  $("#empty-"+resultId).hidden=true;$("#body-"+resultId).hidden=false;
+  if(kind==="reg"){const n=data.predicted_final_grade_code;$("#reg-num").textContent=n.toFixed(2);const band=n<0.5?"High":n<1.5?"Good":n<2.5?"Average":"Low";$("#reg-band").textContent="Approximate category: "+band;$("#reg-note").textContent="This is a numeric code prediction, not a percentage score. Model: "+data.model_used}
+  else{$("#clf-name").textContent=data.predicted_grade_category;$("#clf-code").textContent="Predicted grade category";$("#clf-note").textContent="Grade code mapping: 0 = High, 1 = Good, 2 = Average, 3 = Low. Model: "+data.model_used}
+ }catch(e){toast(e.message||"Prediction failed. Check the input and server status.")}
+}
+function setup(){
+ $$("form").forEach(form=>{
+  form.addEventListener("input",e=>{if(e.target.matches('input[type=range]'))paint(e.target)});
+  form.addEventListener("submit",e=>{e.preventDefault();predict(form.id==="form-reg"?"reg":"clf",form)});
+  $("[data-sample]",form).addEventListener("click",()=>{fill(sample);predict(form.id==="form-reg"?"reg":"clf",form);toast("Loaded a sample row from your dataset")});
+  $("[data-reset]",form).addEventListener("click",()=>{fill(defaults);const kind=form.id==="form-reg"?"reg":"clf";$("#empty-"+kind).hidden=false;$("#body-"+kind).hidden=true;});
+ });
+ $("#tab-reg").onclick=()=>tab("reg");$("#tab-clf").onclick=()=>tab("clf");
+ $("#theme").onclick=()=>{const t=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){}};
+}
+function tab(k){const other=k==="reg"?"clf":"reg";$("#tab-"+k).setAttribute("aria-selected","true");$("#tab-"+other).setAttribute("aria-selected","false");$("#panel-"+k).classList.add("active");$("#panel-"+other).classList.remove("active");$("#tabs").style.setProperty("--i",k==="clf"?1:0)}
+async function start(){
+ try{info=await(await fetch(API+"/dataset/info")).json();sample=await(await fetch(API+"/dataset/sample")).json()}
+ catch(e){$(".wrap").insertAdjacentHTML("afterbegin",'<p class="banner">Start the backend first: uvicorn app:app --reload</p>');return}
+ Object.entries(info.features).forEach(([k,v])=>defaults[k]=v.default);
+ buildForms();setup();
+ try{
+  const comp=await(await fetch(API+"/api/model-comparison")).json();
+  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const renderTask=(task,title,subtitle,primary,secondary)=>{
+   const entries=[];
+   for(const [key,label] of [["with_exam_score","With ExamScore"],["without_exam_score","Without ExamScore"]]){
+    for(const x of (comp[key]?.[task]||[])) entries.push({experiment:label,...x});
+   }
+   return `<article class="model-card"><div class="model-card-head"><h3>${title}</h3><p>${subtitle}</p></div><div class="table-wrap"><table><thead><tr><th>Experiment</th><th>Model</th><th>${primary}</th><th>${secondary}</th></tr></thead><tbody>${entries.map(x=>`<tr><td><span class="experiment-label">${esc(x.experiment)}</span></td><td class="model-name">${esc(x.model.replaceAll("_"," "))}</td><td>${Number(x[task==="regression"?"r2":"accuracy"]).toFixed(3)}</td><td>${Number(x[task==="regression"?"mae":"macro_f1"]).toFixed(3)}</td></tr>`).join("")}</tbody></table></div></article>`;
+  };
+  const content=renderTask("regression","Regression models","Predict a numeric final-grade code.","R²","MAE")+renderTask("classification","Classification models","Predict a final-grade category.","Accuracy","Macro-F1");
+  $("#comparison-table").innerHTML=content;
+ }catch(e){$("#comparison-table").innerHTML='<p class="comparison-status">Model comparison results are currently unavailable. Start the backend and refresh this page.</p>';}
+ $("#stats").innerHTML=`<span class="stat">Dataset records <b>${info.rows.toLocaleString()}</b></span><span class="stat">Input features <b>${Object.keys(info.features).length}</b></span><span class="stat">Prediction tasks <b>2</b></span>`;
+ fill(defaults);
+}
+start();
+</script></body></html>

@@ -1,0 +1,26 @@
+name: Student ML CI
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore private dataset from repository secret
+        env:
+          STUDENT_PERFORMANCE_CSV_BASE64: ${{ secrets.STUDENT_PERFORMANCE_CSV_BASE64 }}
+        run: |
+          if [ -n "$STUDENT_PERFORMANCE_CSV_BASE64" ]; then
+            echo "$STUDENT_PERFORMANCE_CSV_BASE64" | base64 --decode > data/raw/student_performance.csv
+          elif [ ! -f data/raw/student_performance.csv ]; then
+            echo "Set STUDENT_PERFORMANCE_CSV_BASE64 in GitHub Actions secrets (base64-encoded CSV)."
+            exit 1
+          fi
+      - run: make train
+      - run: pytest -q
